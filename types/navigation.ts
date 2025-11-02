@@ -1,37 +1,26 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
-  Home: undefined;
-  Register: undefined;
-  ConnectType: undefined;
-  NovaSenha: undefined;
-  SenhaAlterada: undefined;
-  PersonalInformationForm: undefined;
-  ForgotPassword: undefined;
-  // Rotas de Paciente
-  PersonalInformationFormPacient: undefined;
-  BasicInformationFormPacient: undefined;
-  UserInformationFormPacient: undefined;
-  PasswordInformationFormPacient: undefined;
-  ConfirmRegisterPacient: undefined;
-  // Rotas de Profissional
-  PersonalInformationFormProfessional: undefined;
-  BasicInformationFormProfessional: undefined;
-  UserInformationFormProfessional: undefined;
-  PasswordInformationFormProfessional: undefined;
-  ProfessionalInformationFormProfessional: undefined;
-  ConfirmRegisterProfessional: undefined;
-
-    // Rotas de Clinicas
-    PersonalInformationFormClinic: undefined;
-    BasicInformationFormClinic: undefined;
-    UserInformationFormClinic: undefined;
-    PasswordInformationFormClinic: undefined;
-    InstitutionalInformationFormClinic: undefined;
-    ConfirmRegisterClinic: undefined;
-
+  SplashScreen: undefined;
+  HomeScreen: undefined;
+  RegisterScreen: undefined;
+  ConnectTypeScreen: { userType: 'pacient' | 'professional' | 'clinic' };
+  ForgotPasswordScreen: undefined;
+  NovaSenhaScreen: undefined;
+  SenhaAlteradaScreen: undefined;
   Polity: undefined;
   Terms: undefined;
+  MainApp: undefined; // A rota para o app principal (feed)
 };
 
-export type NavigationProp = NativeStackNavigationProp<RootStackParamList>; 
+// EXPORTANDO OS TIPOS QUE ESTAVAM FALTANDO
+export type SplashScreenProps = NativeStackScreenProps<RootStackParamList, 'SplashScreen'>;
+export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;
+export type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'RegisterScreen'>;
+export type ConnectTypeScreenProps = NativeStackScreenProps<RootStackParamList, 'ConnectTypeScreen'>;
+export type ForgotPasswordScreenProps = NativeStackScreenProps<RootStackParamList, 'ForgotPasswordScreen'>;
+export type NovaSenhaScreenProps = NativeStackScreenProps<RootStackParamList, 'NovaSenhaScreen'>;
+export type SenhaAlteradaScreenProps = NativeStackScreenProps<RootStackParamList, 'SenhaAlteradaScreen'>;
+export type PolityProps = NativeStackScreenProps<RootStackParamList, 'Polity'>;
+export type TermsProps = NativeStackScreenProps<RootStackParamList, 'Terms'>;
+export type MainAppProps = NativeStackScreenProps<RootStackParamList, 'MainApp'>;

@@ -1,97 +1,82 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootStackParamList } from './types/navigation';
+import { StatusBar } from 'react-native';
 
-{/* Tela de Carregamento*/}
+// Contexto de Autenticação
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+// Telas
 import SplashScreen from './screens/SplashScreen';
-
-
-{/* Tela Inicial*/}
 import HomeScreen from './screens/HomeScreen';
-
-{/* Tela de Registro*/}
 import RegisterScreen from './screens/RegisterScreen';
 import ConnectTypeScreen from './screens/ConnectTypeScreen';
-
-{/* Cadastro de Pacientes*/}
-import PersonalInformationFormPacient from './screens/Register/pacient/PersonalInformationForm';
-import BasicInformationFormPacient from './screens/Register/pacient/BasicInformationForm';
-import UserInformationFormPacient from './screens/Register/pacient/UserInformationForm';
-import PasswordInformationFormPacient from './screens/Register/pacient/PasswordInformationForm';
-import ConfirmedRegisterPacient from './screens/Register/pacient/ConfirmedRegister';
-
-{/* Cadastro de Profissionais*/}
-import PersonalInformationFormProfessional from './screens/Register/professional/PersonalInformationForm';
-import BasicInformationFormProfessional from './screens/Register/professional/BasicInformationForm';
-import UserInformationFormProfessional from './screens/Register/professional/UserInformationForm';
-import ProfessionalInformationFormProfessional from './screens/Register/professional/ProfessionalInformationForm';
-import PasswordInformationFormProfessional from './screens/Register/professional/PasswordInformationForm';
-import ConfirmedRegisterProfessional from './screens/Register/professional/ConfirmedRegister';
-
-{/* Cadastro de Clínicas*/}
-import PersonalInformationFormClinic from './screens/Register/clinic/PersonalInformationForm';
-import BasicInformationFormClinic from './screens/Register/clinic/BasicInformationForm';
-import UnityInformationFormClinic from './screens/Register/clinic/UnityInformationForm';
-import PasswordInformationFormClinic from './screens/Register/clinic/PasswordInformationForm';
-import InstitutionalInformationFormClinic from './screens/Register/clinic/InstitutionalInformationForm';
-import ConfirmedRegisterClinic from './screens/Register/clinic/ConfirmedRegister';
-
-{/* Troca de Senha*/}
 import ForgotPasswordScreen from './screens/Password/ForgotPasswordScreen';
 import NovaSenhaScreen from './screens/NovaSenhaScreen';
 import SenhaAlteradaScreen from './screens/SenhaAlteradaScreen';
-
-import Terms from './screens/Terms-Polity/Terms';
 import Polity from './screens/Terms-Polity/Polity';
+import Terms from './screens/Terms-Polity/Terms';
 
-import './global.css';
+// O App Principal (Feed, etc.)
+import BottomNav from './screens/BottomNav'; // O Navegador com as Tabs
+import { StoryViewerProvider } from './screens/contexts/StoryViewerContext';
+import { BlockedUsersProvider } from './screens/contexts/BlockedUsersContext';
 
-const Stack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator<RootStackParamList>();
+const AppStack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+// Pilha de telas de Autenticação (pré-login)
+const AuthScreens = () => (
+  <AuthStack.Navigator
+    initialRouteName="HomeScreen" // A tela de "Entrar como"
+    screenOptions={{ headerShown: false }}
+  >
+    <AuthStack.Screen name="HomeScreen" component={HomeScreen} />
+    <AuthStack.Screen name="RegisterScreen" component={RegisterScreen} />
+    <AuthStack.Screen name="ConnectTypeScreen" component={ConnectTypeScreen} />
+    <AuthStack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
+    <AuthStack.Screen name="NovaSenhaScreen" component={NovaSenhaScreen} />
+    <AuthStack.Screen name="SenhaAlteradaScreen" component={SenhaAlteradaScreen} />
+    <AuthStack.Screen name="Polity" component={Polity} />
+    <AuthStack.Screen name="Terms" component={Terms} />
+  </AuthStack.Navigator>
+);
+
+// Pilha de telas do App Principal (Pós-login)
+const AppScreens = () => (
+  <AppStack.Navigator screenOptions={{ headerShown: false }}>
+    <AppStack.Screen name="MainApp" component={BottomNav} />
+    {/* Adicione aqui outras telas que o BottomNav precise chamar (ex: Perfil de outro usuário, Configurações) */}
+  </AppStack.Navigator>
+);
+
+// O Navegador Raiz que decide qual pilha mostrar
+const RootNavigator = () => {
+  const { authData, loading } = useAuth();
+
+  if (loading) {
+    // A tela de splash é mostrada enquanto o AuthContext verifica o AsyncStorage
+    return <SplashScreen />;
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator 
-        initialRouteName="Splash"
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="ConnectType" component={ConnectTypeScreen} />
-        <Stack.Screen name="NovaSenha" component={NovaSenhaScreen} />
-        <Stack.Screen name="SenhaAlterada" component={SenhaAlteradaScreen} />
-
-        {/* Cadastro de Pacientes*/}
-        <Stack.Screen name="PersonalInformationFormPacient" component={PersonalInformationFormPacient} />
-        <Stack.Screen name="BasicInformationFormPacient" component={BasicInformationFormPacient} />
-        <Stack.Screen name="UserInformationFormPacient" component={UserInformationFormPacient} />
-        <Stack.Screen name="PasswordInformationFormPacient" component={PasswordInformationFormPacient} />
-        <Stack.Screen name="ConfirmRegisterPacient" component={ConfirmedRegisterPacient} />
-
-         {/* Cadastro de Profissionais*/}
-        <Stack.Screen name="PersonalInformationFormProfessional" component={PersonalInformationFormProfessional} />
-        <Stack.Screen name="BasicInformationFormProfessional" component={BasicInformationFormProfessional} />
-        <Stack.Screen name="UserInformationFormProfessional" component={UserInformationFormProfessional} />
-        <Stack.Screen name="PasswordInformationFormProfessional" component={PasswordInformationFormProfessional}/>
-        <Stack.Screen name="ProfessionalInformationFormProfessional" component={ProfessionalInformationFormProfessional}/>
-        <Stack.Screen name="ConfirmRegisterProfessional" component={ConfirmedRegisterProfessional} />
-
-        {/* Cadastro de Clinícas*/}
-        <Stack.Screen name="PersonalInformationFormClinic" component={PersonalInformationFormClinic} />
-        <Stack.Screen name="BasicInformationFormClinic" component={BasicInformationFormClinic} />
-        <Stack.Screen name="InstitutionalInformationFormClinic" component={InstitutionalInformationFormClinic}/>
-        <Stack.Screen name="UnityInformationFormClinic" component={UnityInformationFormClinic} />
-        <Stack.Screen name="PasswordInformationFormClinic" component={PasswordInformationFormClinic}/>
-        <Stack.Screen name="ConfirmRegisterClinic" component={ConfirmedRegisterClinic} />
-
-
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Terms" component={Terms} />
-        <Stack.Screen name="Polity" component={Polity} />
-      </Stack.Navigator>
+      <StatusBar barStyle="dark-content" />
+      {authData?.token ? <AppScreens /> : <AuthScreens />}
     </NavigationContainer>
+  );
+};
+
+// Ponto de entrada principal
+export default function App() {
+  return (
+    <AuthProvider>
+      <BlockedUsersProvider>
+        <StoryViewerProvider>
+          <RootNavigator />
+        </StoryViewerProvider>
+      </BlockedUsersProvider>
+    </AuthProvider>
   );
 }
